@@ -1,0 +1,30 @@
+[
+  {
+    "id": "win-001",
+    "title": "Windows Defender service running",
+    "os": "windows",
+    "level": "L1",
+    "check": {
+      "type": "powershell",
+      "script": "scripts/windows/check_defender.ps1"
+    },
+    "remediation": {
+      "type": "powershell",
+      "script": "scripts/windows/remed_enable_defender.ps1"
+    }
+  },
+  {
+    "id": "lin-001",
+    "title": "SSH root login disabled",
+    "os": "linux",
+    "level": "L1",
+    "check": {
+      "type": "bash",
+      "script": "scripts/linux/check_sshd_root_login.sh"
+    },
+    "remediation": {
+      "type": "bash",
+      "script": "scripts/linux/remed_disable_root_ssh.sh"
+    }
+  }
+]
