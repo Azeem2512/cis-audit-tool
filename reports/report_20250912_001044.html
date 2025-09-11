@@ -1,0 +1,37 @@
+
+    <html>
+    <head>
+        <title>CIS Audit Report</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            h1 { color: #333; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ccc; padding: 8px; }
+            th { background-color: #f2f2f2; }
+        </style>
+    </head>
+    <body>
+        <h1>CIS Audit Report</h1>
+        <p>Generated: 2025-09-12 00:10:44</p>
+        <table>
+            <tr><th>ID</th><th>Title</th><th>Status</th><th>Output</th></tr>
+            
+        <tr>
+            <td>win-001</td>
+            <td>Windows Defender service running</td>
+            <td style="color:green; font-weight:bold;">PASS</td>
+            <td><pre>PASS: Defender enabled</pre></td>
+        </tr>
+        
+        <tr>
+            <td>win-002</td>
+            <td>Windows Firewall enabled on all profiles</td>
+            <td style="color:red; font-weight:bold;">FAIL</td>
+            <td><pre>FAIL: Firewall disabled for profile Private
+FAIL: Firewall disabled for profile Public</pre></td>
+        </tr>
+        
+        </table>
+    </body>
+    </html>
+    

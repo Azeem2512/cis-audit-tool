@@ -14,6 +14,16 @@
     }
   },
   {
+    "id": "win-002",
+    "title": "Windows Firewall enabled on all profiles",
+    "os": "windows",
+    "level": "L1",
+    "check": {
+      "type": "powershell",
+      "script": "scripts/windows/check_firewall.ps1"
+    }
+  },
+  {
     "id": "lin-001",
     "title": "SSH root login disabled",
     "os": "linux",
@@ -25,6 +35,16 @@
     "remediation": {
       "type": "bash",
       "script": "scripts/linux/remed_disable_root_ssh.sh"
+    }
+  },
+  {
+    "id": "lin-002",
+    "title": "Minimum password length is 14 or more",
+    "os": "linux",
+    "level": "L1",
+    "check": {
+      "type": "bash",
+      "script": "scripts/linux/check_passwd_length.sh"
     }
   }
 ]
