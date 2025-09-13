@@ -1,4 +1,4 @@
-import json, datetime, os
+import json, datetime, os, shutil
 
 def generate_html_report(results, reports_dir="reports"):
     # Ensure reports directory exists
@@ -7,6 +7,7 @@ def generate_html_report(results, reports_dir="reports"):
     now = datetime.datetime.now()
     timestamp = now.strftime("%Y%m%d_%H%M%S")
     output_file = os.path.join(reports_dir, f"report_{timestamp}.html")
+    latest_file = os.path.join(reports_dir, "report.html")
 
     rows = ""
     for r in results:
@@ -47,7 +48,14 @@ def generate_html_report(results, reports_dir="reports"):
     </body>
     </html>
     """
+
+    # Write the timestamped file
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(html)
 
+    # Also write/overwrite latest report.html
+    with open(latest_file, "w", encoding="utf-8") as f:
+        f.write(html)
+
     print(f"[+] Report generated: {output_file}")
+    print(f"[+] Latest report updated: {latest_file}")

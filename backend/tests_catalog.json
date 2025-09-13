@@ -24,6 +24,26 @@
     }
   },
   {
+    "id": "win-003",
+    "title": "Ensure SMBv1 is disabled",
+    "os": "windows",
+    "level": "L1",
+    "check": {
+      "type": "powershell",
+      "script": "scripts/windows/check_smbv1.ps1"
+    }
+  },
+  {
+    "id": "win-004",
+    "title": "Ensure RDP requires NLA",
+    "os": "windows",
+    "level": "L1",
+    "check": {
+      "type": "powershell",
+      "script": "scripts/windows/check_rdp_nla.ps1"
+    }
+  },
+  {
     "id": "lin-001",
     "title": "SSH root login disabled",
     "os": "linux",
@@ -45,6 +65,26 @@
     "check": {
       "type": "bash",
       "script": "scripts/linux/check_passwd_length.sh"
+    }
+  },
+  {
+    "id": "lin-003",
+    "title": "Ensure UFW firewall is active",
+    "os": "linux",
+    "level": "L1",
+    "check": {
+      "type": "bash",
+      "script": "scripts/linux/check_ufw.sh"
+    }
+  },
+  {
+    "id": "lin-004",
+    "title": "Ensure auditd service is running",
+    "os": "linux",
+    "level": "L1",
+    "check": {
+      "type": "bash",
+      "script": "scripts/linux/check_auditd.sh"
     }
   }
 ]
