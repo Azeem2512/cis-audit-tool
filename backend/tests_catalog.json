@@ -44,6 +44,36 @@
     }
   },
   {
+    "id": "win-005",
+    "title": "Ensure Guest account is disabled",
+    "os": "windows",
+    "level": "L1",
+    "check": {
+      "type": "powershell",
+      "script": "scripts/windows/check_guest_account.ps1"
+    }
+  },
+  {
+    "id": "win-006",
+    "title": "Ensure AutoRun is disabled",
+    "os": "windows",
+    "level": "L1",
+    "check": {
+      "type": "powershell",
+      "script": "scripts/windows/check_autorun.ps1"
+    }
+  },
+  {
+    "id": "win-007",
+    "title": "Ensure Windows Update service is running",
+    "os": "windows",
+    "level": "L1",
+    "check": {
+      "type": "powershell",
+      "script": "scripts/windows/check_windows_update.ps1"
+    }
+  },
+  {
     "id": "lin-001",
     "title": "SSH root login disabled",
     "os": "linux",
@@ -85,6 +115,36 @@
     "check": {
       "type": "bash",
       "script": "scripts/linux/check_auditd.sh"
+    }
+  },
+  {
+    "id": "lin-005",
+    "title": "Ensure unattended-upgrades is enabled",
+    "os": "linux",
+    "level": "L1",
+    "check": {
+      "type": "bash",
+      "script": "scripts/linux/check_unattended_upgrades.sh"
+    }
+  },
+  {
+    "id": "lin-006",
+    "title": "Ensure firewall is enabled",
+    "os": "linux",
+    "level": "L1",
+    "check": {
+      "type": "bash",
+      "script": "scripts/linux/check_firewall.sh"
+    }
+  },
+  {
+    "id": "lin-007",
+    "title": "Ensure password expiration policy is configured",
+    "os": "linux",
+    "level": "L1",
+    "check": {
+      "type": "bash",
+      "script": "scripts/linux/check_pass_expiry.sh"
     }
   }
 ]

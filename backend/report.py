@@ -1,6 +1,7 @@
-import json, datetime, os, shutil
+import datetime
+import os
 
-def generate_html_report(results, reports_dir="reports"):
+def generate_html_report(results, target_os, reports_dir="reports"):
     # Ensure reports directory exists
     os.makedirs(reports_dir, exist_ok=True)
 
@@ -11,12 +12,26 @@ def generate_html_report(results, reports_dir="reports"):
 
     rows = ""
     for r in results:
-        # Skip entries that were skipped due to OS mismatch
-        if r.get("out") == r.get("err") and "Skipped" in r.get("out", ""):
+        # Only include results matching the target OS
+        if r.get("os") != target_os:
             continue
 
-        status = "PASS" if r["rc"] == 0 else "FAIL" if r["rc"] == 2 else "SKIP/ERROR"
-        color = "green" if status == "PASS" else "red" if status == "FAIL" else "gray"
+        # Skip entries that were skipped due to OS mismatch
+        if "Skipped" in r.get("out", ""):
+            continue
+
+        # Determine status and color
+        if "Skipped" in r.get("out", ""):
+            status = "SKIP"
+            color = "gray"
+        elif r["rc"] == 0:
+            status = "PASS"
+            color = "green"
+        else:
+            status = "FAIL"
+            color = "red"
+
+
         rows += f"""
         <tr>
             <td>{r['id']}</td>

@@ -4,7 +4,7 @@ import os
 import shutil
 import platform
 import sys
-from report import generate_html_report  # <--- import here
+from report import generate_html_report  # import report generator
 
 CATALOG = "backend/tests_catalog.json"
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -54,13 +54,14 @@ def main():
             "title": t.get("title"),
             "rc": rc,
             "out": out if out else err,
-            "err": err
+            "err": err,
+            "os": t.get("os", "unknown")  # <--- ensure OS field is always present
         })
 
     print(json.dumps(results, indent=2))
 
-    # <--- call the HTML report generator at the end
-    generate_html_report(results)
+    # call the HTML report generator at the end
+    generate_html_report(results, SELECTED_OS)
 
 if __name__ == "__main__":
     main()
