@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "C:\Users\User\cis-audit-tool\gui\main.py", line 32, in run_audit
+    results = json.loads(proc.stdout)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Local\Programs\Python\Python312\Lib\json\decoder.py", line 340, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 129 column 1 (char 3426)

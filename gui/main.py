@@ -1,96 +1,168 @@
-import sys, os, platform
-from PySide6.QtWidgets import (
-    QApplication, QMainWindow, QPushButton,
-    QVBoxLayout, QWidget, QTextBrowser, QInputDialog, QMessageBox
-)
-from PySide6.QtCore import QThread, Signal
+# gui/main.py
+import sys
 import subprocess
+import json
+import os
+import datetime
+import re
+import platform
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QPushButton,
+    QTableWidget, QTableWidgetItem, QMessageBox, QHBoxLayout, QRadioButton, QGroupBox
+)
+from PySide6.QtCore import Qt
 
-class AuditRunner(QThread):
-    finished = Signal(str)
+# Ensure project root is in path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from backend import orchestrator
 
-    def __init__(self, os_choice):
-        super().__init__()
-        self.os_choice = os_choice
+# --- Logging setup ---
+LOG_DIR = os.path.join(os.path.dirname(__file__), "..", "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
 
-    def run(self):
-        # Project root (parent of gui/)
-        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-        orchestrator = os.path.join(base_dir, "backend", "orchestrator.py")
-        reports_dir = os.path.join(base_dir, "reports")
+def log_error(message: str) -> str:
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    log_file = os.path.join(LOG_DIR, f"errors_{timestamp}.log")
+    with open(log_file, "w", encoding="utf-8") as f:
+        f.write(message)
+    return log_file
 
-        cmd = [sys.executable, orchestrator, self.os_choice]
-        proc = subprocess.run(cmd, cwd=base_dir, capture_output=True, text=True)
+# --- Audit functions ---
+def run_audit(selected_os):
+    cmd = [sys.executable, "-m", "backend.orchestrator", selected_os]
+    proc = subprocess.run(cmd, capture_output=True, text=True)
 
-        report_file = os.path.join(reports_dir, "report.html")
+    try:
+        # Use regex to extract the first JSON array from stdout
+        match = re.search(r'(\[\s*{.*?}\s*\])', proc.stdout, re.DOTALL)
+        if not match:
+            raise ValueError("No JSON array found in orchestrator output")
+        json_text = match.group(1)
+        results = json.loads(json_text)
+    except Exception:
+        import traceback
+        log_file = log_error(traceback.format_exc() + "\nOutput:\n" + proc.stdout)
+        QMessageBox.critical(
+            None,
+            "Error",
+            f"Failed to parse results.\nFull error saved to:\n{log_file}"
+        )
+        return []
 
-        if os.path.exists(report_file):
-            try:
-                with open(report_file, "r", encoding="utf-8") as f:
-                    html = f.read()
-                self.finished.emit(html)
-            except Exception as e:
-                self.finished.emit(f"<h2>Error reading report</h2><pre>{e}</pre>")
+    return results
+
+
+def fix_issue(test_id, fix_description, selected_os, table):
+    confirm = QMessageBox.question(
+        None,
+        "Confirm Fix",
+        f"This will apply:\n\n{fix_description}\n\nDo you want to continue?",
+        QMessageBox.Yes | QMessageBox.No
+    )
+    if confirm != QMessageBox.Yes:
+        return
+
+    try:
+        result = orchestrator.run_fix(test_id)
+        if "error" in result:
+            QMessageBox.critical(None, "Fix Error", result["error"])
         else:
-            self.finished.emit(
-                "<h2>No report generated</h2>"
-                "<pre>" + proc.stdout + "\n" + proc.stderr + "</pre>"
-            )
+            QMessageBox.information(None, "Fix Result", f"{result['title']}\n\n{result['out']}")
+    except Exception:
+        import traceback
+        log_file = log_error(traceback.format_exc())
+        QMessageBox.critical(
+            None,
+            "Fix Error",
+            f"An error occurred while applying the fix.\nFull error saved to:\n{log_file}"
+        )
 
-class MainWindow(QMainWindow):
+    refreshed = run_audit(selected_os)
+    update_table(table, refreshed, selected_os)
+
+def update_table(table, results, selected_os):
+    table.setRowCount(0)
+    for r in results:
+        if r.get("os") != selected_os:
+            continue  # Only show results for the selected OS
+
+        if "Skipped" in r.get("out", ""):
+            continue  # Don't show skipped checks for other OS
+
+        if r["rc"] == 0:
+            status = "PASS"
+        elif r["rc"] != 0:
+            status = "FAIL"
+        else:
+            status = "ERROR"
+
+        row = table.rowCount()
+        table.insertRow(row)
+        table.setItem(row, 0, QTableWidgetItem(r["id"]))
+        table.setItem(row, 1, QTableWidgetItem(r["title"]))
+        table.setItem(row, 2, QTableWidgetItem(status))
+        table.setItem(row, 3, QTableWidgetItem(r["out"]))
+
+        if r.get("has_fix") and status in ("FAIL", "SKIP"):
+            btn = QPushButton("Fix")
+            btn.clicked.connect(lambda _, rid=r["id"], desc=r["fix_description"]: fix_issue(rid, desc, selected_os, table))
+            table.setCellWidget(row, 4, btn)
+
+USER_OS = platform.system().lower()  # "windows" or "linux"
+
+# --- GUI ---
+class AuditApp(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("CIS Audit Tool")
-        self.resize(900, 600)
-
-        self.browser = QTextBrowser()
-        self.browser.setOpenExternalLinks(True)
-
-        self.button = QPushButton("Run Audit")
-        self.button.clicked.connect(self.run_audit)
-
         layout = QVBoxLayout()
-        layout.addWidget(self.button)
-        layout.addWidget(self.browser)
 
-        container = QWidget()
-        container.setLayout(layout)
-        self.setCentralWidget(container)
+        # OS selector
+        self.os_group = QGroupBox("Select OS")
+        os_layout = QHBoxLayout()
+        self.radio_win = QRadioButton("Windows")
+        self.radio_linux = QRadioButton("Linux")
+        # Default to user's OS
+        if USER_OS == "windows":
+            self.radio_win.setChecked(True)
+        else:
+            self.radio_linux.setChecked(True)
+        os_layout.addWidget(self.radio_win)
+        os_layout.addWidget(self.radio_linux)
+        self.os_group.setLayout(os_layout)
+        layout.addWidget(self.os_group)
 
-    def run_audit(self):
-        # Detect actual OS
-        actual_os = platform.system().lower()   # "windows" or "linux"
+        # Run Audit button
+        self.run_btn = QPushButton("Run Audit")
+        self.run_btn.clicked.connect(self.run_audit_clicked)
+        layout.addWidget(self.run_btn)
 
-        # Ask user for OS choice
-        os_choice, ok = QInputDialog.getItem(
-            self, "Select OS", "Run audit for:", ["windows", "linux"], 0, False
-        )
-        if not ok:
-            return
+        # Table
+        self.table = QTableWidget()
+        self.table.setColumnCount(5)
+        self.table.setHorizontalHeaderLabels(["ID", "Title", "Status", "Output", "Fix"])
+        self.table.horizontalHeader().setStretchLastSection(True)
+        layout.addWidget(self.table)
 
-        # Validate choice
-        if os_choice != actual_os:
+        self.setLayout(layout)
+
+    def run_audit_clicked(self):
+        selected_os = "windows" if self.radio_win.isChecked() else "linux"
+        if selected_os != USER_OS:
             QMessageBox.critical(
                 self,
                 "OS Mismatch",
-                f"You selected '{os_choice}', but this system is actually '{actual_os}'.\n"
-                f"Please select the correct OS."
+                f"You are running this tool on {USER_OS.capitalize()}, but selected {selected_os.capitalize()}.\n"
+                "Please select the correct OS."
             )
             return
+        results = run_audit(selected_os)
+        update_table(self.table, results, selected_os)
 
-        # Run if valid
-        self.button.setEnabled(False)
-        self.browser.setHtml(f"<h2>Running {os_choice} audit...</h2>")
-        self.thread = AuditRunner(os_choice)
-        self.thread.finished.connect(self.display_report)
-        self.thread.start()
-
-    def display_report(self, html):
-        self.browser.setHtml(html)
-        self.button.setEnabled(True)
-
+# --- Run application ---
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = MainWindow()
+    window = AuditApp()
+    window.resize(900, 500)
     window.show()
     sys.exit(app.exec())

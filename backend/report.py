@@ -12,12 +12,8 @@ def generate_html_report(results, target_os, reports_dir="reports"):
 
     rows = ""
     for r in results:
-        # Only include results matching the target OS
+        # Include only results matching target OS
         if r.get("os") != target_os:
-            continue
-
-        # Skip entries that were skipped due to OS mismatch
-        if "Skipped" in r.get("out", ""):
             continue
 
         # Determine status and color
@@ -30,7 +26,6 @@ def generate_html_report(results, target_os, reports_dir="reports"):
         else:
             status = "FAIL"
             color = "red"
-
 
         rows += f"""
         <tr>

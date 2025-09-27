@@ -1,0 +1,145 @@
+[+] Report generated: reports\report_20250928_000610.html
+[+] Latest report updated: reports\report.html
+[
+  {
+    "id": "win-001",
+    "title": "Windows Defender service running",
+    "rc": 0,
+    "out": "PASS: Defender enabled",
+    "err": "",
+    "has_fix": false,
+    "fix_description": "",
+    "os": "windows"
+  },
+  {
+    "id": "win-002",
+    "title": "Windows Firewall enabled on all profiles",
+    "rc": 2,
+    "out": "FAIL: Firewall disabled for profile Domain\nFAIL: Firewall disabled for profile Private\nFAIL: Firewall disabled for profile Public",
+    "err": "",
+    "has_fix": true,
+    "fix_description": "Enable Windows Firewall for Domain, Public and Private profiles using Set-NetFirewallProfile (no restart).",
+    "os": "windows"
+  },
+  {
+    "id": "win-003",
+    "title": "Ensure SMBv1 is disabled",
+    "rc": 0,
+    "out": "PASS: SMBv1 is disabled",
+    "err": "",
+    "has_fix": true,
+    "fix_description": "Disable SMBv1 feature (if present) using Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol (no restart).",
+    "os": "windows"
+  },
+  {
+    "id": "win-004",
+    "title": "Ensure RDP requires NLA",
+    "rc": 0,
+    "out": "PASS: RDP requires NLA",
+    "err": "",
+    "has_fix": false,
+    "fix_description": "",
+    "os": "windows"
+  },
+  {
+    "id": "win-005",
+    "title": "Ensure Guest account is disabled",
+    "rc": 1,
+    "out": "FAIL: Guest account is enabled",
+    "err": "",
+    "has_fix": true,
+    "fix_description": "Disable the built-in Guest local account using Disable-LocalUser (no restart).",
+    "os": "windows"
+  },
+  {
+    "id": "win-006",
+    "title": "Ensure AutoRun is disabled",
+    "rc": 1,
+    "out": "FAIL: AutoRun is not properly disabled",
+    "err": "",
+    "has_fix": false,
+    "fix_description": "",
+    "os": "windows"
+  },
+  {
+    "id": "win-007",
+    "title": "Ensure Windows Update service is running",
+    "rc": 0,
+    "out": "PASS: Windows Update service is running",
+    "err": "",
+    "has_fix": false,
+    "fix_description": "",
+    "os": "windows"
+  },
+  {
+    "id": "lin-001",
+    "title": "SSH root login disabled",
+    "rc": 0,
+    "out": "Skipped: linux check on windows",
+    "err": "Skipped: linux check on windows",
+    "has_fix": false,
+    "fix_description": "",
+    "os": "linux"
+  },
+  {
+    "id": "lin-002",
+    "title": "Minimum password length is 14 or more",
+    "rc": 0,
+    "out": "Skipped: linux check on windows",
+    "err": "Skipped: linux check on windows",
+    "has_fix": false,
+    "fix_description": "",
+    "os": "linux"
+  },
+  {
+    "id": "lin-003",
+    "title": "Ensure UFW firewall is active",
+    "rc": 0,
+    "out": "Skipped: linux check on windows",
+    "err": "Skipped: linux check on windows",
+    "has_fix": false,
+    "fix_description": "",
+    "os": "linux"
+  },
+  {
+    "id": "lin-004",
+    "title": "Ensure auditd service is running",
+    "rc": 0,
+    "out": "Skipped: linux check on windows",
+    "err": "Skipped: linux check on windows",
+    "has_fix": false,
+    "fix_description": "",
+    "os": "linux"
+  },
+  {
+    "id": "lin-005",
+    "title": "Ensure unattended-upgrades is enabled",
+    "rc": 0,
+    "out": "Skipped: linux check on windows",
+    "err": "Skipped: linux check on windows",
+    "has_fix": false,
+    "fix_description": "",
+    "os": "linux"
+  },
+  {
+    "id": "lin-006",
+    "title": "Ensure firewall is enabled",
+    "rc": 0,
+    "out": "Skipped: linux check on windows",
+    "err": "Skipped: linux check on windows",
+    "has_fix": false,
+    "fix_description": "",
+    "os": "linux"
+  },
+  {
+    "id": "lin-007",
+    "title": "Ensure password expiration policy is configured",
+    "rc": 0,
+    "out": "Skipped: linux check on windows",
+    "err": "Skipped: linux check on windows",
+    "has_fix": false,
+    "fix_description": "",
+    "os": "linux"
+  }
+]
+

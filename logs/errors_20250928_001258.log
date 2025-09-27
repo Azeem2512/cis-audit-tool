@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\User\cis-audit-tool\gui\main.py", line 38, in run_audit
+    raise ValueError("No JSON array found in orchestrator output")
+ValueError: No JSON array found in orchestrator output
+
+Output:
+{"error": "Unexpected error occurred. See log: C:\Users\User\cis-audit-tool\backend\..\logs\errors_20250928_001258.log"}

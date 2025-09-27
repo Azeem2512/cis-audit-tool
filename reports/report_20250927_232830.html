@@ -12,15 +12,16 @@
     </head>
     <body>
         <h1>CIS Audit Report</h1>
-        <p>Generated: 2025-09-28 00:24:38</p>
+        <p>Generated: 2025-09-27 23:28:30</p>
         <table>
-            <tr><th>ID</th><th>Title</th><th>Status</th><th>Output</th></tr>
+            <tr><th>ID</th><th>Title</th><th>Status</th><th>Output</th><th>Suggested Fix</th></tr>
             
         <tr>
             <td>win-001</td>
             <td>Windows Defender service running</td>
             <td style="color:green; font-weight:bold;">PASS</td>
             <td><pre>PASS: Defender enabled</pre></td>
+            <td>—</td>
         </tr>
         
         <tr>
@@ -30,6 +31,7 @@
             <td><pre>FAIL: Firewall disabled for profile Domain
 FAIL: Firewall disabled for profile Private
 FAIL: Firewall disabled for profile Public</pre></td>
+            <td>—</td>
         </tr>
         
         <tr>
@@ -37,6 +39,7 @@ FAIL: Firewall disabled for profile Public</pre></td>
             <td>Ensure SMBv1 is disabled</td>
             <td style="color:green; font-weight:bold;">PASS</td>
             <td><pre>PASS: SMBv1 is disabled</pre></td>
+            <td>—</td>
         </tr>
         
         <tr>
@@ -44,6 +47,7 @@ FAIL: Firewall disabled for profile Public</pre></td>
             <td>Ensure RDP requires NLA</td>
             <td style="color:green; font-weight:bold;">PASS</td>
             <td><pre>PASS: RDP requires NLA</pre></td>
+            <td>—</td>
         </tr>
         
         <tr>
@@ -51,6 +55,7 @@ FAIL: Firewall disabled for profile Public</pre></td>
             <td>Ensure Guest account is disabled</td>
             <td style="color:red; font-weight:bold;">FAIL</td>
             <td><pre>FAIL: Guest account is enabled</pre></td>
+            <td>—</td>
         </tr>
         
         <tr>
@@ -58,6 +63,7 @@ FAIL: Firewall disabled for profile Public</pre></td>
             <td>Ensure AutoRun is disabled</td>
             <td style="color:red; font-weight:bold;">FAIL</td>
             <td><pre>FAIL: AutoRun is not properly disabled</pre></td>
+            <td>—</td>
         </tr>
         
         <tr>
@@ -65,6 +71,7 @@ FAIL: Firewall disabled for profile Public</pre></td>
             <td>Ensure Windows Update service is running</td>
             <td style="color:red; font-weight:bold;">FAIL</td>
             <td><pre>FAIL: Windows Update service is not running</pre></td>
+            <td>—</td>
         </tr>
         
         </table>
