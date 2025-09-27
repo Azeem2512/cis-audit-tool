@@ -21,7 +21,12 @@
     "check": {
       "type": "powershell",
       "script": "scripts/windows/check_firewall.ps1"
-    }
+    },
+    "fix": {
+      "type": "powershell",
+      "script": "scripts/windows/fix_enable_firewall.ps1"
+    },
+    "fix_description": "Enable Windows Firewall for Domain, Public and Private profiles using Set-NetFirewallProfile (no restart)."
   },
   {
     "id": "win-003",
@@ -31,7 +36,12 @@
     "check": {
       "type": "powershell",
       "script": "scripts/windows/check_smbv1.ps1"
-    }
+    },
+    "fix": {
+      "type": "powershell",
+      "script": "scripts/windows/fix_smbv1.ps1"
+    },
+    "fix_description": "Disable SMBv1 feature (if present) using Disable-WindowsOptionalFeature -Online -FeatureName SMB1Protocol (no restart)."
   },
   {
     "id": "win-004",
@@ -51,7 +61,12 @@
     "check": {
       "type": "powershell",
       "script": "scripts/windows/check_guest_account.ps1"
-    }
+    },
+    "fix": {
+      "type": "powershell",
+      "script": "scripts/windows/fix_disable_guest.ps1"
+    },
+    "fix_description": "Disable the built-in Guest local account using Disable-LocalUser (no restart)."
   },
   {
     "id": "win-006",
